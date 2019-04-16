@@ -26,12 +26,9 @@ class Node {
 			this.left.parent = null;
 			this.left = null;
 			
-		}  else
-		if (this.right === node) {
+		}  else	if (this.right === node) {
 			this.right.parent = null;
-			this.right = null;
-			
-
+			this.right = null;		
 		} else {new Error(error);
 		}
 			
@@ -42,39 +39,48 @@ class Node {
 		if (this.parent === null) return;
 			
 		this.parent.removeChild(this);
-			 
-			  
-		
 	}
 
 	swapWithParent() {
-		
 		if (this.parent === null) return;
-		
-		if(this.parent.parent.left === this.parent){
-			this.parent.parent.left = this;
-		} else if(this.parent.parent.right === this.parent){
-			this.parent.parent.right = this;
+		 var thisParent = this.parent;
+		 var thisParentParent = this.parent.parent;
+		 if(thisParentParent && thisParentParent.left == thisParent){
+			 thisParentParent.left = this;
+		 } else if(thisParentParent && thisParentParent.right == thisParent){
+			thisParentParent.right = this;
 		}
 		
-		let  swap = this.parent;
-		this.parent = this.parent.parent;
-		this.parent.parent = swap;
-
-		
-
-		
-
-		
-		
-		
-
-		
-		
-		
-
-		
-		
+		// swap parents
+		 this.parent = this.parent.parent;
+		 thisParent.parent = this;
+		 
+		 var thisLeft = this.left;
+		 var thisRight = this.right;
+		 if(thisParent.left == this){
+			this.left = thisParent;
+			this.right = thisParent.right;
+			if(this.right){
+				this.right.parent = this;
+			}
+		 } else {
+			 this.right = thisParent;
+			 this.left = thisParent.left;
+			 if(this.left){
+			 	this.left.parent = this;
+			 }
+		 }
+		 
+		 thisParent.left = thisLeft;
+		 thisParent.right = thisRight;
+		 
+		 if(thisLeft){
+			 thisLeft.parent = thisParent;
+		 }
+		 
+		 if(thisRight){
+			 thisRight.parent = thisParent;
+		 }
 	}
 }
 
