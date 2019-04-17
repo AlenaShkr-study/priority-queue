@@ -10,7 +10,9 @@ class Node {
 	}
 
 	appendChild(node) {
-		
+		if(!node){
+			return
+		}
 		if (!this.left) {
 			this.left = node;
 			this.left.parent = this;
@@ -21,7 +23,9 @@ class Node {
 	}
 
 	removeChild(node) {
-		
+		if(!node){
+			return;
+		}
 		if (this.left === node) {
 			this.left.parent = null;
 			this.left = null;
@@ -43,44 +47,39 @@ class Node {
 
 	swapWithParent() {
 		if (this.parent === null) return;
-		 var thisParent = this.parent;
-		 var thisParentParent = this.parent.parent;
-		 if(thisParentParent && thisParentParent.left == thisParent){
-			 thisParentParent.left = this;
-		 } else if(thisParentParent && thisParentParent.right == thisParent){
-			thisParentParent.right = this;
-		}
+		const thisParent = this.parent;
+		const thisParentParent = this.parent.parent;
 		
-		// swap parents
-		 this.parent = this.parent.parent;
-		 thisParent.parent = this;
-		 
-		 var thisLeft = this.left;
-		 var thisRight = this.right;
-		 if(thisParent.left == this){
-			this.left = thisParent;
-			this.right = thisParent.right;
-			if(this.right){
-				this.right.parent = this;
-			}
-		 } else {
-			 this.right = thisParent;
-			 this.left = thisParent.left;
-			 if(this.left){
-			 	this.left.parent = this;
-			 }
-		 }
-		 
-		 thisParent.left = thisLeft;
-		 thisParent.right = thisRight;
-		 
-		 if(thisLeft){
-			 thisLeft.parent = thisParent;
-		 }
-		 
-		 if(thisRight){
-			 thisRight.parent = thisParent;
-		 }
+		thisParent.remove();
+		
+		const parentLeft = thisParent.left;
+		const parentRight = thisParent.right;
+		
+		thisParent.removeChild(parentLeft);
+		
+		thisParent.removeChild(parentRight);
+		
+		const thisLeft = this.left;
+		
+		const thisRight = this.right;
+		
+		this.removeChild(thisLeft);
+		this.removeChild(thisRight);
+		
+		if(parentLeft == this){
+			this.appendChild(thisParent);
+			this.appendChild(parentRight);
+			
+		} else if(parentRight == this){
+			this.appendChild(parentLeft);
+			this.appendChild(thisParent)
+		}
+		thisParent.appendChild(thisLeft);
+		thisParent.appendChild(thisRight);
+		
+		if(thisParentParent){
+			thisParentParent.appendChild(this);
+		}
 	}
 }
 
